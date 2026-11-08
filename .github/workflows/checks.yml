@@ -1,0 +1,31 @@
+name: checks
+on: [push, pull_request, workflow_dispatch]
+jobs:
+  windows-powershell-5-1:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Parse scripts and lights.json (Windows PowerShell 5.1)
+        shell: powershell
+        run: |
+          $PSVersionTable.PSVersion
+          foreach ($f in 'wled-bridge.ps1','test-client.ps1','tests/smoke.ps1') {
+            $errs = $null
+            [void][System.Management.Automation.Language.Parser]::ParseFile((Resolve-Path $f), [ref]$null, [ref]$errs)
+            if ($errs) { $errs | ForEach-Object { Write-Host "$f : $_" }; exit 1 }
+          }
+          Get-Content lights.json -Raw | ConvertFrom-Json | Out-Null
+      - name: Smoke test against a mock WLED controller
+        shell: powershell
+        run: |
+          $d = Join-Path $env:RUNNER_TEMP 'bridge'
+          New-Item -ItemType Directory $d | Out-Null
+          Copy-Item wled-bridge.ps1,test-client.ps1,lights.json $d
+          (Get-Content "$d\lights.json" -Raw) -replace '"ip": "10.0.0.240"','"ip": "127.0.0.1:8080"' | Set-Content "$d\lights.json"
+          Start-Process python -ArgumentList 'tests/mock_wled.py' -WindowStyle Hidden
+          Start-Sleep 2
+          .\tests\smoke.ps1 -Dir $d
+      - name: Bridge log
+        if: always()
+        shell: powershell
+        run: Get-Content "$env:RUNNER_TEMP\bridge\wled-bridge.log" -ErrorAction SilentlyContinue

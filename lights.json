@@ -1,0 +1,171 @@
+{
+  "_help": "Edit freely, then restart the bridge (or the Claude Desktop app). Colours: '#RRGGBB' (WLED works out white itself), '#RRGGBBWW' (explicit white channel) or a name like 'amber'. 'effect' may be a list: the first name WLED knows is used. 'level' is wall brightness 0-100 (before master brightness). Flash step 'at' is a fraction 0..1 of the flash length. A step side set to 'base' returns that wall to the base scene.",
+
+  "wled": { "ip": "10.0.0.240", "timeout_ms": 1000 },
+
+  "wall_gain": { "window": 1.0, "poster": 1.0 },
+
+  "defaults": { "speed": 128, "intensity": 128, "level": 100, "palette": "Default" },
+
+  "scenes": {
+    "tavern": {
+      "description": "Warm amber candle/fire flicker",
+      "all": { "color": "#FF8A1E", "color2": "#2A0E00", "effect": ["Candle", "Fire Flicker"], "speed": 70, "intensity": 130, "level": 70 }
+    },
+    "cave": {
+      "description": "Dim blue-green, slow",
+      "all": { "color": "#0B6F6A", "color2": "#001018", "effect": ["Breathe", "Solid"], "speed": 20, "level": 30 }
+    },
+    "forest": {
+      "description": "Soft green, gentle aurora",
+      "all": { "color": "#2E9E4A", "color2": "#04140A", "effect": ["Aurora", "Breathe", "Solid"], "palette": "Forest", "speed": 40, "intensity": 90, "level": 55 }
+    },
+    "giants forge": {
+      "aliases": ["giant's forge", "forge"],
+      "description": "Deep red and orange fire",
+      "all": { "color": "#FF3A00", "color2": "#3A0000", "effect": ["Fire 2012", "Fire Flicker"], "palette": "Fire", "speed": 110, "intensity": 200, "level": 85 }
+    },
+    "night": {
+      "description": "Dim blue",
+      "all": { "color": "#0A1E6E", "effect": "Solid", "level": 18 }
+    },
+    "daylight": {
+      "description": "Soft white from the white channel",
+      "all": { "color": "#000000FF", "effect": "Solid", "level": 60 }
+    },
+    "combat": {
+      "description": "Red, slow pulse",
+      "all": { "color": "#E01010", "color2": "#200000", "effect": ["Breathe", "Solid"], "speed": 60, "level": 70 }
+    },
+    "combat epic": {
+      "description": "Brighter red, faster pulse",
+      "all": { "color": "#FF1A1A", "color2": "#300000", "effect": ["Breathe", "Solid"], "speed": 110, "level": 100 }
+    },
+    "combat tense": {
+      "description": "Dark red, very slow",
+      "all": { "color": "#7A0505", "color2": "#100000", "effect": ["Breathe", "Solid"], "speed": 30, "level": 35 }
+    },
+    "creepy": {
+      "description": "Purple, slow breathe",
+      "all": { "color": "#7A18C8", "color2": "#0C0018", "effect": ["Breathe", "Solid"], "speed": 25, "level": 45 }
+    },
+    "calm": {
+      "description": "Warm white",
+      "all": { "color": "#FFB466", "effect": "Solid", "level": 55 }
+    },
+    "off": {
+      "description": "All lights off (the previous scene is kept and returns with power on)",
+      "power": false
+    }
+  },
+
+  "flashes": {
+    "fire": {
+      "description": "Orange flicker",
+      "default_ms": 1500, "restore_ms": 400, "color": "#FF5A00",
+      "steps": [
+        { "at": 0, "both": { "color": "#FF5A00", "color2": "#200400", "effect": ["Fire Flicker", "Fire 2012", "Solid"], "speed": 230, "intensity": 255, "level": 100, "tt_ms": 100 } }
+      ]
+    },
+    "lightning": {
+      "description": "White, jumps between the walls",
+      "default_ms": 1000, "restore_ms": 250, "color": "#DDE8FF",
+      "steps": [
+        { "at": 0.00, "window": { "color": "#FFFFFF", "effect": "Solid", "level": 100, "tt_ms": 0 } },
+        { "at": 0.08, "window": "base" },
+        { "at": 0.12, "poster": { "color": "#FFFFFF", "effect": "Solid", "level": 100, "tt_ms": 0 } },
+        { "at": 0.22, "poster": "base" },
+        { "at": 0.30, "both":   { "color": "#FFFFFF", "effect": "Solid", "level": 100, "tt_ms": 0 } },
+        { "at": 0.38, "both": "base" },
+        { "at": 0.46, "window": { "color": "#E6EEFF", "effect": "Solid", "level": 70, "tt_ms": 0 } },
+        { "at": 0.54, "window": "base", "poster": { "color": "#E6EEFF", "effect": "Solid", "level": 70, "tt_ms": 0 } },
+        { "at": 0.62, "poster": "base" }
+      ]
+    },
+    "thunder": {
+      "description": "White burst, then a long fade",
+      "default_ms": 1800, "restore_ms": 800, "color": "#E6EEFF",
+      "steps": [
+        { "at": 0.00, "both": { "color": "#FFFFFF", "effect": "Solid", "level": 100, "tt_ms": 0 } },
+        { "at": 0.12, "both": { "color": "#C8D6FF", "effect": "Solid", "level": 40, "tt_ms": 600 } }
+      ]
+    },
+    "cold": {
+      "description": "Icy blue",
+      "default_ms": 1400, "restore_ms": 500, "color": "#A0E8FF",
+      "steps": [
+        { "at": 0.00, "both": { "color": "#A0E8FF", "effect": "Solid", "level": 100, "tt_ms": 150 } }
+      ]
+    },
+    "necrotic": {
+      "aliases": ["unholy"],
+      "description": "Sickly green and purple, swapping",
+      "default_ms": 1600, "restore_ms": 450, "color": "#7CFF2E",
+      "steps": [
+        { "at": 0.0, "window": { "color": "#7CFF2E", "color2": "#0A1A00", "effect": ["Breathe", "Solid"], "speed": 200, "level": 90, "tt_ms": 150 },
+                      "poster": { "color": "#7A1FA2", "color2": "#100018", "effect": ["Breathe", "Solid"], "speed": 200, "level": 90, "tt_ms": 150 } },
+        { "at": 0.5, "window": { "color": "#7A1FA2", "color2": "#100018", "effect": ["Breathe", "Solid"], "speed": 200, "level": 90, "tt_ms": 200 },
+                      "poster": { "color": "#7CFF2E", "color2": "#0A1A00", "effect": ["Breathe", "Solid"], "speed": 200, "level": 90, "tt_ms": 200 } }
+      ]
+    },
+    "radiant": {
+      "description": "Gold-white",
+      "default_ms": 1300, "restore_ms": 500, "color": "#FFE9A0",
+      "steps": [
+        { "at": 0.0, "both": { "color": "#FFF2C0", "effect": "Solid", "level": 100, "tt_ms": 100 } },
+        { "at": 0.5, "both": { "color": "#FFD870", "effect": "Solid", "level": 75, "tt_ms": 400 } }
+      ]
+    },
+    "psychic": {
+      "description": "Magenta pulse",
+      "default_ms": 1400, "restore_ms": 450, "color": "#FF00D0",
+      "steps": [
+        { "at": 0.0, "both": { "color": "#FF00D0", "color2": "#200020", "effect": ["Breathe", "Solid"], "speed": 220, "level": 95, "tt_ms": 120 } }
+      ]
+    },
+    "acid": {
+      "aliases": ["poison"],
+      "description": "Green, bubbling",
+      "default_ms": 1500, "restore_ms": 450, "color": "#3CFF1E",
+      "steps": [
+        { "at": 0.0, "both": { "color": "#3CFF1E", "color2": "#031800", "effect": ["Twinkle", "Sparkle", "Solid"], "speed": 200, "intensity": 200, "level": 95, "tt_ms": 120 } }
+      ]
+    },
+    "healing": {
+      "description": "Soft gold glow",
+      "default_ms": 2000, "restore_ms": 800, "color": "#FFC864",
+      "steps": [
+        { "at": 0.0, "both": { "color": "#FFC864", "effect": "Solid", "level": 15, "tt_ms": 0 } },
+        { "at": 0.05, "both": { "color": "#FFC864", "effect": "Solid", "level": 65, "tt_ms": 600 } }
+      ]
+    },
+    "explosion": {
+      "description": "White-orange burst, then fade",
+      "default_ms": 1200, "restore_ms": 500, "color": "#FF9A3C",
+      "steps": [
+        { "at": 0.00, "both": { "color": "#FFFFFF", "effect": "Solid", "level": 100, "tt_ms": 0 } },
+        { "at": 0.08, "both": { "color": "#FF7A1A", "effect": "Solid", "level": 100, "tt_ms": 150 } },
+        { "at": 0.30, "both": { "color": "#FF3A00", "effect": "Solid", "level": 60, "tt_ms": 400 } },
+        { "at": 0.60, "both": { "color": "#801000", "effect": "Solid", "level": 25, "tt_ms": 400 } }
+      ]
+    },
+    "natural 20": {
+      "aliases": ["nat20", "nat 20", "crit"],
+      "description": "Gold burst",
+      "default_ms": 1500, "restore_ms": 500, "color": "#FFD23C",
+      "steps": [
+        { "at": 0.00, "both": { "color": "#FFD23C", "effect": "Solid", "level": 100, "tt_ms": 0 } },
+        { "at": 0.12, "both": { "color": "#FFF4C0", "effect": "Solid", "level": 100, "tt_ms": 100 } },
+        { "at": 0.30, "both": { "color": "#FFD23C", "color2": "#402800", "effect": ["Sparkle", "Twinkle", "Solid"], "speed": 255, "intensity": 255, "level": 100, "tt_ms": 150 } }
+      ]
+    },
+    "natural 1": {
+      "aliases": ["nat1", "nat 1", "fumble"],
+      "description": "Quick dim, then back",
+      "default_ms": 900, "restore_ms": 250, "color": "#303030",
+      "steps": [
+        { "at": 0.0, "both": { "base_scale": 0.08, "tt_ms": 100 } }
+      ]
+    }
+  }
+}
