@@ -3,7 +3,7 @@ param([string]$Dir)
 $ErrorActionPreference = 'Stop'
 $fail = 0
 function Check($name, $cmd, $must) {
-    $out = (& $cmd *>&1 | Out-String)
+    $out = (& $cmd *>&1 | Out-String) -replace '\r?\n', ''   # console wrapping would split words
     if ($out -match $must) { Write-Host "PASS $name" } else { Write-Host "FAIL $name`n$out"; $script:fail++ }
 }
 $tc = Join-Path $Dir 'test-client.ps1'
